@@ -7,3 +7,9 @@ spring:
     url: "jdbc:postgresql://localhost:5432/shop"
     username: postgres
     password: lol112233
+  messages:
+    fallback-to-system-locale: 'false'
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+

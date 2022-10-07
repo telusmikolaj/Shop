@@ -31,47 +31,78 @@ public class Product {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public BigDecimal getPrice() {
         return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public LocalDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
-
     public LocalDateTime getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
-        this.updated = updated;
+
+    public static final class ProductBuilder {
+        private Long id;
+        private String title;
+        private String description;
+        private BigDecimal price;
+        private LocalDateTime created;
+        private LocalDateTime updated;
+
+        private ProductBuilder() {
+        }
+
+        public static ProductBuilder builder() {
+            return new ProductBuilder();
+        }
+
+        public ProductBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public ProductBuilder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public ProductBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public ProductBuilder withPrice(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public ProductBuilder withCreated(LocalDateTime created) {
+            this.created = created;
+            return this;
+        }
+
+        public ProductBuilder withUpdated(LocalDateTime updated) {
+            this.updated = updated;
+            return this;
+        }
+
+        public Product build() {
+            Product product = new Product(title, description, price);
+            product.id = this.id;
+            product.updated = LocalDateTime.now();
+            product.created = LocalDateTime.now();
+            return product;
+        }
     }
 }
