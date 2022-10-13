@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ProductRepositoryImpl implements ProductRepository {
+public class ProductRepositoryImpl{
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -69,8 +69,4 @@ public class ProductRepositoryImpl implements ProductRepository {
         return this.entityManager.createQuery("select count(1) from Product", Long.class).getSingleResult();
     }
 
-    @Override
-    public Product getTest() {
-        return new Product();
-    }
 }
