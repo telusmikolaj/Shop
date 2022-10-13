@@ -44,7 +44,7 @@ class ProductControllerIT {
     @BeforeEach
     public void setUp() {
 
-        this.productToUpdate = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2);
+        this.productToUpdate = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2, null);
 
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri("http://localhost:8080/")
@@ -78,7 +78,7 @@ class ProductControllerIT {
 
     @Test
     void createProduct() {
-        ProductDTO newProduct = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE);
+        ProductDTO newProduct = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE,null);
         ProductDTO createdProductDto = given().spec(requestSpecification).body(newProduct)
                 .when().post()
                 .then().spec(responseSpecification).extract().body().as(ProductDTO.class);
@@ -89,7 +89,7 @@ class ProductControllerIT {
 
     @Test
     void updateProduct() {
-        ProductDTO newProductData = new ProductDTO("NEW_TITLE", "NEW_DESCRIPTION", BigDecimal.valueOf(1500));
+        ProductDTO newProductData = new ProductDTO("NEW_TITLE", "NEW_DESCRIPTION", BigDecimal.valueOf(1500),null);
 
         ProductDTO updatedProductDto = given().pathParam("id", productToUpdateId)
                 .spec(requestSpecification).body(newProductData)
