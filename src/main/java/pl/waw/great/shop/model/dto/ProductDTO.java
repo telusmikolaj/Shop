@@ -16,13 +16,17 @@ public class ProductDTO {
     @Min(value = 1, message = "{priceMinValue}")
     private BigDecimal price;
 
+    @NotBlank(message = "{categoryNotBlank}")
+    private String categoryName;
+
     public ProductDTO() {
     }
 
-    public ProductDTO(String title, String description, BigDecimal price) {
+    public ProductDTO(String title, String description, BigDecimal price, String categoryName) {
         this.title = title;
         this.description = description;
         this.price = price;
+        this.categoryName = categoryName;
     }
 
     public Long getId() {
@@ -55,6 +59,14 @@ public class ProductDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     @Override

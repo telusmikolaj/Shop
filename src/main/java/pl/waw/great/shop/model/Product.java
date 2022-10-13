@@ -17,8 +17,12 @@ public class Product {
     private LocalDateTime created;
     private LocalDateTime updated;
 
+    @ManyToOne
+    private Category category;
+
     public Product() {
     }
+
     public Product(String title, String description, BigDecimal price) {
         this.title = title;
         this.description = description;
@@ -104,6 +108,14 @@ public class Product {
             product.created = LocalDateTime.now();
             return product;
         }
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override

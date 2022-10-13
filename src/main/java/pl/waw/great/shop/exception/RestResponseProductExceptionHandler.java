@@ -24,7 +24,7 @@ public class RestResponseProductExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    @ExceptionHandler(value = { ProductWithGivenIdNotExistsException.class })
+    @ExceptionHandler(value = {ProductWithGivenIdNotExistsException.class})
     public ResponseEntity<Object> handleProductWithGivenIdNotExistsExceptions(ProductWithGivenIdNotExistsException e) {
         String errorMessage = messageSource.getMessage("productWithGivenIdNotExists", new Object[]{e.getId()}, Locale.getDefault());
         ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
@@ -32,7 +32,7 @@ public class RestResponseProductExceptionHandler {
         return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
     }
 
-    @ExceptionHandler(value = { ProductWithGivenTitleExists.class })
+    @ExceptionHandler(value = {ProductWithGivenTitleExists.class})
     public ResponseEntity<Object> handleProductWithGivenTitleExists(ProductWithGivenTitleExists e) {
         String errorMessage = messageSource.getMessage("productWithGivenTitleExists", new Object[]{e.getTitle()}, Locale.getDefault());
         ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
@@ -40,12 +40,21 @@ public class RestResponseProductExceptionHandler {
         return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
     }
 
-    @ExceptionHandler(value = { MethodArgumentNotValidException.class })
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<Object> handleEmployeeDtoException(MethodArgumentNotValidException e) {
         ErrorInfo employeeException = new ErrorInfo(getFieldErrorsString(e), HttpStatus.BAD_REQUEST, LocalDateTime.now());
         log.error(getFieldErrorsString(e));
         return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
     }
+
+    @ExceptionHandler(value = {CategoryWithGivenNameNotExistsException.class})
+    public ResponseEntity<Object> handleCategoryWithGivenNameNotExistsException(CategoryWithGivenNameNotExistsException e) {
+        String errorMessage = messageSource.getMessage("categoryWithGivenNameNotExists", new Object[]{e.getName()}, Locale.getDefault());
+        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
+        log.error(errorMessage);
+        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
+    }
+
     public String getFieldErrorsString(MethodArgumentNotValidException e) {
         StringBuilder sb = new StringBuilder();
         List<FieldError> errors = e.getFieldErrors();

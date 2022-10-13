@@ -8,18 +8,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.waw.great.shop.exception.ProductWithGivenIdNotExistsException;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
+import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.model.mapper.ProductMapper;
+import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 
 import java.math.BigDecimal;
@@ -44,7 +43,12 @@ class ProductServiceImplTest {
 
     public static final BigDecimal UPDATED_PRICE = BigDecimal.valueOf(1200);
 
+    private static final String CATEGORY_NAME = "Electronics";
+
+    private Category category;
     ProductRepository productRepository = mock(ProductRepository.class);
+
+    CategoryRepository categoryRepository = mock(CategoryRepository.class);
 
     @Spy
     ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
@@ -59,6 +63,7 @@ class ProductServiceImplTest {
     @BeforeEach
     void setUp() {
         this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE);
+        this.category = new Category(CATEGORY_NAME);
     }
 
     @AfterEach()
@@ -69,7 +74,8 @@ class ProductServiceImplTest {
     @Test
     void createProduct() {
         when(this.productRepository.createProduct(any())).thenReturn(this.product);
-        ProductDTO createdProduct = this.productService.createProduct(new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE));
+        when(this.categoryRepository.findCategoryByName(anyString())).thenReturn(this.category);
+        ProductDTO createdProduct = this.productService.createProduct(new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME));
         assertEquals(PRODUCT_TITLE, createdProduct.getTitle());
         assertEquals(DESCRIPTION, createdProduct.getDescription());
         assertEquals(PRICE, createdProduct.getPrice());
@@ -77,7 +83,7 @@ class ProductServiceImplTest {
 
     @Test
     void createProductWithDuplicateTitleShouldThrowException() {
-        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE);
+        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME);
         when(this.productRepository.findProductByTitle(anyString())).thenReturn(Optional.of(this.product));
 
         Assertions.assertThrows(ProductWithGivenTitleExists.class, () -> {
@@ -85,9 +91,10 @@ class ProductServiceImplTest {
         });
     }
 
+
     @Test
     void updateProduct() {
-        ProductDTO dtoToUpdate = new ProductDTO(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE);
+        ProductDTO dtoToUpdate = new ProductDTO(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, CATEGORY_NAME);
         Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE);
         when(this.productRepository.getProduct(anyLong())).thenReturn(this.product);
         when(this.productRepository.updateProduct(any())).thenReturn(updated);
@@ -98,7 +105,7 @@ class ProductServiceImplTest {
 
     @Test
     void updateToDuplicateTitleShouldThrowException() {
-        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE);
+        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME);
         when(this.productRepository.findProductByTitle(anyString())).thenReturn(Optional.of(this.product));
         Assertions.assertThrows(ProductWithGivenTitleExists.class, () -> {
             this.productService.updateProduct(1L, dto);

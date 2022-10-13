@@ -3,9 +3,11 @@ package pl.waw.great.shop.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
+import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.model.mapper.ProductMapper;
+import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 
 import java.util.List;
@@ -16,9 +18,12 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository) {
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public ProductDTO createProduct(ProductDTO productDTO) {
@@ -27,8 +32,13 @@ public class ProductService {
                     throw new ProductWithGivenTitleExists(productDTO.getTitle());
                 });
 
+        Category category = this.categoryRepository.findCategoryByName(productDTO.getCategoryName());
         Product createdProduct = this.productRepository.createProduct(productMapper.dtoToProduct(productDTO));
-        return productMapper.productToDto(createdProduct);
+        this.categoryRepository.addProductToCategory(createdProduct, category);
+        ProductDTO createdDto = productMapper.productToDto(createdProduct);
+        createdDto.setCategoryName(category.getName());
+
+        return createdDto;
     }
 
     public ProductDTO updateProduct(Long id, ProductDTO newProduct) {
