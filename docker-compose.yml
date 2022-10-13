@@ -1,4 +1,4 @@
-version: '2'
+version: '3.7'
 
 services:
 
@@ -15,15 +15,21 @@ services:
 #      - SPRING_DATASOURCE_PASSWORD=compose-postgres
 #      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
-  db:
-    image: 'postgres:13.1-alpine'
-    container_name: db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+  postgres:
+    image: postgres
     volumes:
-      - db:/var/lib/postgresql/data
+      - goreit-postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=shop
+      - PGDATA=shop
+    networks:
+      - goreit
+
+networks:
+  goreit:
 
 volumes:
-  db:
-    driver: local
+  goreit-postgres-data:
