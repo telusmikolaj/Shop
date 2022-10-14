@@ -1,5 +1,6 @@
 package pl.waw.great.shop.repository;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.waw.great.shop.exception.ProductWithGivenIdNotExistsException;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ProductRepository {
+public class ProductRepositoryImpl{
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -21,18 +22,20 @@ public class ProductRepository {
         this.entityManager.persist(product);
         return product;
     }
+
     @Transactional
-    public Product getProduct(Long id) {
-        Product product = this.entityManager.find(Product.class, id);
-        if (product == null) {
-            throw new ProductWithGivenIdNotExistsException(id);
-        }
-        return product;
+    public Optional<Product> getProduct(Long id) {
+        Session session = this.entityManager.unwrap(Session.class);
+        return session.byId(Product.class).loadOptional(id);
     }
+
     @Transactional
     public boolean deleteProduct(Long id) {
-        Product productToDelete = this.getProduct(id);
+        Product productToDelete = this.getProduct(id)
+                .orElseThrow(() -> new ProductWithGivenIdNotExistsException(id));
+
         this.entityManager.remove(productToDelete);
+
         return true;
     }
 
@@ -48,6 +51,7 @@ public class ProductRepository {
         return true;
     }
 
+    @Transactional
     public List<Product> findAllProducts() {
         return this.entityManager.createQuery("SELECT a FROM  Product a", Product.class).getResultList();
     }
@@ -60,6 +64,7 @@ public class ProductRepository {
                 .findFirst();
     }
 
+    @Transactional
     public Long getProductsQuantity() {
         return this.entityManager.createQuery("select count(1) from Product", Long.class).getSingleResult();
     }

@@ -3,6 +3,7 @@ package pl.waw.great.shop.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "PRODUCT")
@@ -16,15 +17,18 @@ public class Product {
     private LocalDateTime created;
     private LocalDateTime updated;
 
+    @ManyToOne
+    private Category category;
+
+    public Product() {
+    }
+
     public Product(String title, String description, BigDecimal price) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.created = LocalDateTime.now();
         this.updated = LocalDateTime.now();
-    }
-
-    public Product() {
     }
 
     public Long getId() {
@@ -104,5 +108,26 @@ public class Product {
             product.created = LocalDateTime.now();
             return product;
         }
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(title, product.title) && Objects.equals(description, product.description) && Objects.equals(price, product.price);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, price);
     }
 }
