@@ -85,7 +85,8 @@ class ProductControllerTest {
         String productDtoAsJson = objectMapper.writeValueAsString(this.productDTO);
 
         MvcResult result = sendRequest(MockMvcRequestBuilders.post("/product")
-                .content(productDtoAsJson).contentType(MediaType.APPLICATION_JSON), HttpStatus.OK);
+                .content(productDtoAsJson)
+                .contentType(MediaType.APPLICATION_JSON), HttpStatus.OK);
 
         ProductDTO createdProductDto = objectMapper.readValue(result.getResponse().getContentAsString(), ProductDTO.class);
         assertNotNull(createdProductDto);
