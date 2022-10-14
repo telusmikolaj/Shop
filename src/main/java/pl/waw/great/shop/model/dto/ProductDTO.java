@@ -1,5 +1,7 @@
 package pl.waw.great.shop.model.dto;
 
+import pl.waw.great.shop.config.CategoryType;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 import javax.validation.constraints.*;
@@ -16,13 +18,13 @@ public class ProductDTO {
     @Min(value = 1, message = "{priceMinValue}")
     private BigDecimal price;
 
-    @NotBlank(message = "{categoryNotBlank}")
-    private String categoryName;
+    @NotNull
+    private CategoryType categoryName;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(String title, String description, BigDecimal price, String categoryName) {
+    public ProductDTO(String title, String description, BigDecimal price, CategoryType categoryName) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -61,11 +63,11 @@ public class ProductDTO {
         this.price = price;
     }
 
-    public String getCategoryName() {
+    public CategoryType getCategoryName() {
         return categoryName;
     }
 
-    public void setCategoryName(String categoryName) {
+    public void setCategoryName(CategoryType categoryName) {
         this.categoryName = categoryName;
     }
 

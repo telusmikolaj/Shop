@@ -2,6 +2,7 @@ package pl.waw.great.shop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
@@ -36,7 +37,7 @@ public class ProductService {
         Product createdProduct = this.productRepository.createProduct(productMapper.dtoToProduct(productDTO));
         this.categoryRepository.addProductToCategory(createdProduct, category);
         ProductDTO createdDto = productMapper.productToDto(createdProduct);
-        createdDto.setCategoryName(category.getName());
+        createdDto.setCategoryName(CategoryType.valueOf(category.getName()));
 
         return createdDto;
     }

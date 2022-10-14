@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ErrorInfo;
 import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.repository.ProductRepository;
@@ -48,7 +49,7 @@ class ProductControllerTest {
 
     private static final Long NOT_EXISTING_ID = 500L;
 
-    private static final String CATEGORY_NAME = "Electronics";
+    private static final CategoryType CATEGORY_NAME = CategoryType.EDUKACJA;
 
     private ProductDTO productDTO;
 
@@ -143,20 +144,6 @@ class ProductControllerTest {
 
         ErrorInfo exceptionDtoResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorInfo.class);
         assertEquals("Price must be higher than 1", exceptionDtoResponse.getMessage());
-    }
-
-    @Test
-    @Transactional
-    void createWithNotExistingCategoryShouldThrowException() throws Exception {
-        ProductDTO dtoWithNotExistingCategory = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, BigDecimal.ONE, "CARS");
-
-        String productDtoAsJson = objectMapper.writeValueAsString(dtoWithNotExistingCategory);
-
-        MvcResult result = sendRequest(MockMvcRequestBuilders.post("/product")
-                .content(productDtoAsJson).contentType(MediaType.APPLICATION_JSON), HttpStatus.CONFLICT);
-        ErrorInfo exceptionDtoResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ErrorInfo.class);
-
-        assertEquals("Category with name: " + dtoWithNotExistingCategory.getCategoryName() + " not exists", exceptionDtoResponse.getMessage());
     }
 
     @Test

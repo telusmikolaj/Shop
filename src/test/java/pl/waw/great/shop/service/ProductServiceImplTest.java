@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
@@ -43,7 +44,7 @@ class ProductServiceImplTest {
 
     public static final BigDecimal UPDATED_PRICE = BigDecimal.valueOf(1200);
 
-    private static final String CATEGORY_NAME = "Electronics";
+    private static final CategoryType CATEGORY_NAME = CategoryType.ELEKRONIKA;
 
     private Category category;
     ProductRepository productRepository = mock(ProductRepository.class);
@@ -62,8 +63,8 @@ class ProductServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE);
-        this.category = new Category(CATEGORY_NAME);
+        this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE, null);
+        this.category = new Category(CATEGORY_NAME.name());
     }
 
     @AfterEach()
@@ -74,7 +75,7 @@ class ProductServiceImplTest {
     @Test
     void createProduct() {
         when(this.productRepository.createProduct(any())).thenReturn(this.product);
-        when(this.categoryRepository.findCategoryByName(anyString())).thenReturn(this.category);
+        when(this.categoryRepository.findCategoryByName(any())).thenReturn(this.category);
         ProductDTO createdProduct = this.productService.createProduct(new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME));
         assertEquals(PRODUCT_TITLE, createdProduct.getTitle());
         assertEquals(DESCRIPTION, createdProduct.getDescription());
@@ -95,7 +96,7 @@ class ProductServiceImplTest {
     @Test
     void updateProduct() {
         ProductDTO dtoToUpdate = new ProductDTO(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, CATEGORY_NAME);
-        Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE);
+        Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, null);
         when(this.productRepository.getProduct(anyLong())).thenReturn(this.product);
         when(this.productRepository.updateProduct(any())).thenReturn(updated);
         ProductDTO saved = this.productService.updateProduct(1L, dtoToUpdate);
