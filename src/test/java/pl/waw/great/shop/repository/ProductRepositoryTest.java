@@ -1,10 +1,12 @@
 package pl.waw.great.shop.repository;
 
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 
 import java.math.BigDecimal;
@@ -25,6 +27,7 @@ class ProductRepositoryTest {
     private static final BigDecimal PRICE = BigDecimal.valueOf(999);
 
     private static final BigDecimal PRICE_2 = BigDecimal.valueOf(899);
+    private static final Category CATEGORY = new Category();
 
     @Autowired
     private ProductRepository productRepository;
@@ -33,7 +36,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        this.product = new Product(PRODUCT_NAME, DESCRIPTION, PRICE);
+        this.product = new Product(PRODUCT_NAME, DESCRIPTION, PRICE, null);
         this.productRepository.createProduct(this.product);
     }
 
@@ -45,7 +48,7 @@ class ProductRepositoryTest {
     @Test
     void create() {
         assertNotNull(this.product.getId());
-        this.productRepository.createProduct(new Product("title", "ddses", BigDecimal.valueOf(15)));
+        this.productRepository.createProduct(new Product("title", "ddses", BigDecimal.valueOf(15), null));
     }
 
     @Test
@@ -62,7 +65,7 @@ class ProductRepositoryTest {
 
     @Test
     void update() {
-        Product newProduct = new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2);
+        Product newProduct = new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2, null);
         newProduct.setId(this.product.getId());
         Product updatedProduct = this.productRepository.updateProduct(newProduct);
         assertEquals(updatedProduct, newProduct);
@@ -70,7 +73,7 @@ class ProductRepositoryTest {
 
     @Test
     void findAllProducts() {
-        this.productRepository.createProduct(new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2));
+        this.productRepository.createProduct(new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2, null ));
         List<Product> allProducts = this.productRepository.findAllProducts();
         assertEquals(2, allProducts.size());
     }

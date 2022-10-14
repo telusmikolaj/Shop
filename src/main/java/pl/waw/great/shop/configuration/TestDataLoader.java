@@ -32,7 +32,8 @@ public class TestDataLoader {
                 .mapToObj(product -> new Product(
                         randomAlphanumeric(randomDataGenerator.nextInt(2, 10)),
                         randomAlphanumeric(randomDataGenerator.nextInt(2, 20)),
-                        BigDecimal.valueOf(Long.parseLong(randomNumeric(1, 5)))
+                        BigDecimal.valueOf(Long.parseLong(randomNumeric(1, 5))),
+                        null
                 )).collect(Collectors.toList());
 
         productList.forEach(this.productRepository::createProduct);

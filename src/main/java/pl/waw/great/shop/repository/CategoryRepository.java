@@ -2,6 +2,7 @@ package pl.waw.great.shop.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.CategoryWithGivenNameNotExistsException;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
@@ -25,12 +26,12 @@ public class CategoryRepository {
     }
 
     @Transactional
-    public Category findCategoryByName(String name) {
+    public Category findCategoryByName(CategoryType categoryType) {
         TypedQuery<Category> query = this.entityManager.createQuery("SELECT c FROM Category c WHERE c.name=:name", Category.class);
-        query.setParameter("name", name);
+        query.setParameter("name", categoryType.name());
         return query.getResultStream()
                 .findFirst()
-                .orElseThrow(() -> new CategoryWithGivenNameNotExistsException(name));
+                .orElseThrow(() -> new CategoryWithGivenNameNotExistsException(categoryType.name()));
     }
 
 }

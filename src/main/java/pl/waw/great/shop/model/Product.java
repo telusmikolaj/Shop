@@ -23,10 +23,11 @@ public class Product {
     public Product() {
     }
 
-    public Product(String title, String description, BigDecimal price) {
+    public Product(String title, String description, BigDecimal price, Category category) {
         this.title = title;
         this.description = description;
         this.price = price;
+        this.category = category;
         this.created = LocalDateTime.now();
         this.updated = LocalDateTime.now();
     }
@@ -77,60 +78,6 @@ public class Product {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
-    }
-
-    public static final class ProductBuilder {
-        private Long id;
-        private String title;
-        private String description;
-        private BigDecimal price;
-        private LocalDateTime created;
-        private LocalDateTime updated;
-
-        private ProductBuilder() {
-        }
-
-        public static ProductBuilder builder() {
-            return new ProductBuilder();
-        }
-
-        public ProductBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public ProductBuilder withTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public ProductBuilder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public ProductBuilder withPrice(BigDecimal price) {
-            this.price = price;
-            return this;
-        }
-
-        public ProductBuilder withCreated(LocalDateTime created) {
-            this.created = created;
-            return this;
-        }
-
-        public ProductBuilder withUpdated(LocalDateTime updated) {
-            this.updated = updated;
-            return this;
-        }
-
-        public Product build() {
-            Product product = new Product(title, description, price);
-            product.id = this.id;
-            product.updated = LocalDateTime.now();
-            product.created = LocalDateTime.now();
-            return product;
-        }
     }
 
     public Category getCategory() {
