@@ -8,11 +8,13 @@
         <version>2.7.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>pl.waw.great</groupId>
     <artifactId>shop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>shop</name>
     <description>Demo project for Spring Boot</description>
+    <packaging>jar</packaging>
     <properties>
         <java.version>1.8</java.version>
         <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
@@ -130,9 +132,6 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <finalName>shop-api-docker</finalName>
-    </build>
     <profiles>
         <profile>
             <id>integration-tests</id>
