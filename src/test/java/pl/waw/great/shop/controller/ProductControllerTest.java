@@ -24,9 +24,11 @@ import pl.waw.great.shop.exception.ErrorInfo;
 import pl.waw.great.shop.model.Comment;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.CommentDto;
+import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.model.dto.ProductListElementDto;
 import pl.waw.great.shop.repository.CommentRepository;
+import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 import pl.waw.great.shop.service.CommentService;
 import pl.waw.great.shop.service.ProductService;
@@ -73,6 +75,8 @@ class ProductControllerTest {
 
     private ProductDTO toUpdateDto;
 
+    private Category category;
+
     private CommentDto commentDto;
 
     private Long createdProductId;
@@ -89,6 +93,9 @@ class ProductControllerTest {
     private ProductRepository productRepository;
 
     @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
     private CommentRepository commentRepository;
 
     @Autowired
@@ -98,6 +105,7 @@ class ProductControllerTest {
     void setup() {
         this.commentDto = new CommentDto(TEST_NAME, TEST_EMAIL, TEST_TEXT);
         this.productDTO = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME);
+        this.category = new Category(CATEGORY_NAME.toString());
         this.toUpdateDto = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2, CATEGORY_NAME);
         this.createdProductId = this.productService.createProduct(this.toUpdateDto).getId();
         this.commentService.createComment(this.toUpdateDto.getTitle(), this.commentDto);
@@ -233,6 +241,7 @@ class ProductControllerTest {
     void deleteProductById() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.delete("/product/" + this.createdProductId)
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);
+
 
         boolean isDeleted = objectMapper.readValue(result.getResponse().getContentAsString(), Boolean.class);
         assertTrue(isDeleted);
