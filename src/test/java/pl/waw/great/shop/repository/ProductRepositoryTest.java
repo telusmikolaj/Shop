@@ -27,6 +27,7 @@ class ProductRepositoryTest {
     private static final BigDecimal PRICE = BigDecimal.valueOf(999);
 
     private static final BigDecimal PRICE_2 = BigDecimal.valueOf(899);
+
     private static final Category CATEGORY = new Category();
 
     @Autowired

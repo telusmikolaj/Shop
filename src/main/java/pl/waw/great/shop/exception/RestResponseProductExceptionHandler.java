@@ -40,6 +40,13 @@ public class RestResponseProductExceptionHandler {
         return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
     }
 
+    @ExceptionHandler(value = {ProductWithGivenTitleNotExistsException.class})
+    public ResponseEntity<Object> handleProductWithGivenTitleNotExists(ProductWithGivenTitleNotExistsException e) {
+        String errorMessage = messageSource.getMessage("productWithGivenTitleNotExists", new Object[]{e.getTitle()}, Locale.getDefault());
+        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
+        log.error(errorMessage);
+        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
+    }
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<Object> handleEmployeeDtoException(MethodArgumentNotValidException e) {
         ErrorInfo employeeException = new ErrorInfo(getFieldErrorsString(e), HttpStatus.BAD_REQUEST, LocalDateTime.now());
@@ -50,6 +57,14 @@ public class RestResponseProductExceptionHandler {
     @ExceptionHandler(value = {CategoryWithGivenNameNotExistsException.class})
     public ResponseEntity<Object> handleCategoryWithGivenNameNotExistsException(CategoryWithGivenNameNotExistsException e) {
         String errorMessage = messageSource.getMessage("categoryWithGivenNameNotExists", new Object[]{e.getName()}, Locale.getDefault());
+        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
+        log.error(errorMessage);
+        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
+    }
+
+    @ExceptionHandler(value = {InvalidCommentIndexException.class})
+    public ResponseEntity<Object> handleInvalidCommentIndexException(InvalidCommentIndexException e) {
+        String errorMessage = messageSource.getMessage("invalidCommentIndex", new Object[]{e.getIndex()}, Locale.getDefault());
         ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
         log.error(errorMessage);
         return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());

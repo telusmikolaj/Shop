@@ -1,14 +1,17 @@
 package pl.waw.great.shop.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import pl.waw.great.shop.config.CategoryType;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.*;
 
 
 public class ProductDTO {
-
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @NotBlank(message = "{titleNotBlank}")
     private String title;
@@ -17,9 +20,11 @@ public class ProductDTO {
     @NotNull
     @Min(value = 1, message = "{priceMinValue}")
     private BigDecimal price;
-
     @NotNull
     private CategoryType categoryName;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    List<CommentDto> commentsList = new ArrayList<>();
+
 
     public ProductDTO() {
     }
@@ -69,6 +74,14 @@ public class ProductDTO {
 
     public void setCategoryName(CategoryType categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public List<CommentDto> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(List<CommentDto> commentsList) {
+        this.commentsList = commentsList;
     }
 
     @Override

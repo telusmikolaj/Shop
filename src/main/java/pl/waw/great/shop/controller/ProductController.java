@@ -1,7 +1,10 @@
 package pl.waw.great.shop.controller;
 
 import org.springframework.web.bind.annotation.*;
+import pl.waw.great.shop.model.dto.CommentDto;
 import pl.waw.great.shop.model.dto.ProductDTO;
+import pl.waw.great.shop.model.dto.ProductListElementDto;
+import pl.waw.great.shop.service.CommentService;
 import pl.waw.great.shop.service.ProductService;
 
 import javax.validation.Valid;
@@ -13,8 +16,11 @@ public class ProductController {
 
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
+    private final CommentService commentService;
+
+    public ProductController(ProductService productService, CommentService commentService) {
         this.productService = productService;
+        this.commentService = commentService;
     }
 
     @PostMapping
@@ -27,13 +33,24 @@ public class ProductController {
         return this.productService.updateProduct(id, productDTO);
     }
 
-    @GetMapping("/{id}")
-    public ProductDTO getProductById(@PathVariable Long id) {
-        return this.productService.getProduct(id);
+
+    @GetMapping("/{title}")
+    public ProductDTO getProductByTitle(@PathVariable String title) {
+        return this.productService.getProductByTitle(title);
+    }
+
+    @PostMapping("/{productTitle}")
+    public CommentDto addComment(@PathVariable String productTitle, @Valid @RequestBody CommentDto commentDto) {
+        return this.commentService.createComment(productTitle, commentDto);
+    }
+
+    @DeleteMapping("/{productTitle}/{commentIndex}")
+    public boolean deleteComment(@PathVariable String productTitle, @PathVariable int commentIndex) {
+        return this.commentService.delete(productTitle, commentIndex);
     }
 
     @GetMapping
-    public List<ProductDTO> findAllProducts() {
+    public List<ProductListElementDto> findAllProducts() {
         return this.productService.findAllProducts();
     }
 
@@ -42,9 +59,6 @@ public class ProductController {
         return this.productService.deleteProduct(id);
     }
 
-    @DeleteMapping
-    public boolean deleteAllProducts() {
-        return this.productService.deleteAllProducts();
-    }
+
 
 }

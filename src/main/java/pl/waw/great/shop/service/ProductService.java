@@ -4,9 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
+import pl.waw.great.shop.exception.ProductWithGivenTitleNotExistsException;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
+import pl.waw.great.shop.model.dto.CommentDto;
 import pl.waw.great.shop.model.dto.ProductDTO;
+import pl.waw.great.shop.model.dto.ProductListElementDto;
+import pl.waw.great.shop.model.mapper.CommentMapper;
+import pl.waw.great.shop.model.mapper.ProductListElementMapper;
 import pl.waw.great.shop.model.mapper.ProductMapper;
 import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
@@ -21,10 +26,15 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    private final CommentMapper commentMapper;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    private final ProductListElementMapper productListElementMapper;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, CommentMapper commentMapper, ProductListElementMapper productListElementMapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.commentMapper = commentMapper;
+        this.productListElementMapper = productListElementMapper;
     }
 
     public ProductDTO createProduct(ProductDTO productDTO) {
@@ -50,7 +60,9 @@ public class ProductService {
                     throw new ProductWithGivenTitleExists(newProduct.getTitle());
                 });
 
+        Category category = this.categoryRepository.findCategoryByName(newProduct.getCategoryName());
         Product updatedProduct = this.productRepository.updateProduct(productMapper.dtoToProduct(newProduct));
+        this.categoryRepository.addProductToCategory(updatedProduct, category);
         return productMapper.productToDto(updatedProduct);
     }
 
@@ -59,10 +71,23 @@ public class ProductService {
         return productMapper.productToDto(product);
     }
 
-    public List<ProductDTO> findAllProducts() {
+    public ProductDTO getProductByTitle(String title) {
+        Product product = this.productRepository.findProductByTitle(title)
+                .orElseThrow(() -> new ProductWithGivenTitleNotExistsException(title));
+
+        List<CommentDto> productCommentsDtos = product.getCommentsList()
+                .stream().map(commentMapper::commentToDto).collect(Collectors.toList());
+
+        ProductDTO productDTO = productMapper.productToDto(product);
+        productDTO.setCommentsList(productCommentsDtos);
+
+        return productDTO;
+    }
+
+    public List<ProductListElementDto> findAllProducts() {
         return this.productRepository.findAllProducts()
                 .stream()
-                .map(productMapper::productToDto)
+                .map(productListElementMapper::productToDto)
                 .collect(Collectors.toList());
     }
 

@@ -18,6 +18,8 @@ import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.ProductDTO;
+import pl.waw.great.shop.model.dto.ProductListElementDto;
+import pl.waw.great.shop.model.mapper.ProductListElementMapper;
 import pl.waw.great.shop.model.mapper.ProductMapper;
 import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
@@ -44,7 +46,7 @@ class ProductServiceImplTest {
 
     public static final BigDecimal UPDATED_PRICE = BigDecimal.valueOf(1200);
 
-    private static final CategoryType CATEGORY_NAME = CategoryType.ELEKRONIKA;
+    private static final CategoryType CATEGORY_NAME = CategoryType.ELEKTRONIKA;
 
     private Category category;
     ProductRepository productRepository = mock(ProductRepository.class);
@@ -53,6 +55,9 @@ class ProductServiceImplTest {
 
     @Spy
     ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
+
+    @Spy
+    ProductListElementMapper productListElementMapper  = Mappers.getMapper(ProductListElementMapper.class);
     @InjectMocks
     ProductService productService;
 
@@ -65,6 +70,7 @@ class ProductServiceImplTest {
     void setUp() {
         this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE, null);
         this.category = new Category(CATEGORY_NAME.name());
+        this.product.setCategory(category);
     }
 
     @AfterEach()
@@ -96,7 +102,7 @@ class ProductServiceImplTest {
     @Test
     void updateProduct() {
         ProductDTO dtoToUpdate = new ProductDTO(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, CATEGORY_NAME);
-        Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, null);
+        Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, this.category);
         when(this.productRepository.getProduct(anyLong())).thenReturn(this.product);
         when(this.productRepository.updateProduct(any())).thenReturn(updated);
         ProductDTO saved = this.productService.updateProduct(1L, dtoToUpdate);
@@ -124,7 +130,7 @@ class ProductServiceImplTest {
     @Test
     void findAllProducts() {
         when(this.productRepository.findAllProducts()).thenReturn(Collections.singletonList(this.product));
-        List<ProductDTO> allProducts = this.productService.findAllProducts();
+        List<ProductListElementDto> allProducts = this.productService.findAllProducts();
         assertEquals(1, allProducts.size());
     }
 

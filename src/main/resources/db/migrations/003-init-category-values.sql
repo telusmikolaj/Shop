@@ -1,4 +1,7 @@
-INSERT INTO product_category (name) VALUES
+--liquibase formatted sql
+
+--changeset liquibase:3
+INSERT INTO category (name) VALUES
                                         ('ELEKTRONIKA'),
                                         ('MOTORYZACJA'),
                                         ('EDUKACJA'),

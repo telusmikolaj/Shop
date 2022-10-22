@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "product_category")
+@Table(name = "category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,22 +54,17 @@ public class Category {
     }
 
     public void setProductList(List<Product> productList) {
+
         this.productList = productList;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
+    public void setCreated() {
+
+        this.created = LocalDateTime.now();
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
+    public void setUpdated() {
 
-    public LocalDateTime getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(LocalDateTime updated) {
-        this.updated = updated;
+        this.updated = LocalDateTime.now();
     }
 }

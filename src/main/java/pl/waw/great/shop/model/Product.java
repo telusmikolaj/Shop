@@ -1,8 +1,12 @@
 package pl.waw.great.shop.model;
 
+import pl.waw.great.shop.config.CategoryType;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +23,9 @@ public class Product {
 
     @ManyToOne
     private Category category;
+
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    private List<Comment> commentsList = new ArrayList<>();
 
     public Product() {
     }
@@ -47,15 +54,6 @@ public class Product {
     public BigDecimal getPrice() {
         return price;
     }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public LocalDateTime getUpdated() {
-        return updated;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -72,20 +70,34 @@ public class Product {
         this.price = price;
     }
 
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
+    public void setCreated() {
+        this.created = LocalDateTime.now();
     }
 
-    public void setUpdated(LocalDateTime updated) {
-        this.updated = updated;
+    public void setUpdated() {
+        this.updated = LocalDateTime.now();
     }
-
     public Category getCategory() {
         return category;
     }
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public int addComment(Comment comment) {
+        this.commentsList.add(comment);
+        comment.setProduct(this);
+
+        return this.commentsList.indexOf(comment);
+    }
+
+    public List<Comment> getCommentsList() {
+        return commentsList;
+    }
+
+    public void setCommentsList(List<Comment> commentsList) {
+        this.commentsList = commentsList;
     }
 
     @Override

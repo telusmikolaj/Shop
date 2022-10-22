@@ -10,6 +10,8 @@ import pl.waw.great.shop.model.Product;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Repository
 public class CategoryRepository {
@@ -20,18 +22,45 @@ public class CategoryRepository {
     @Transactional
     public Category addProductToCategory(Product product, Category category) {
         category.addProduct(product);
+        category.setCreated();
+        category.setUpdated();
         this.entityManager.persist(category);
 
         return category;
     }
 
     @Transactional
+    public void addCategory(Category category) {
+        this.entityManager.persist(category);
+    }
+
+    @Transactional
     public Category findCategoryByName(CategoryType categoryType) {
-        TypedQuery<Category> query = this.entityManager.createQuery("SELECT c FROM Category c WHERE c.name=:name", Category.class);
+        TypedQuery<Category> query = this.entityManager.createQuery("SELECT c FROM Category c left join fetch c.productList p WHERE c.name=:name", Category.class);
         query.setParameter("name", categoryType.name());
         return query.getResultStream()
                 .findFirst()
                 .orElseThrow(() -> new CategoryWithGivenNameNotExistsException(categoryType.name()));
+    }
+
+    @Transactional
+    public int countProductsFromCategory(CategoryType categoryType) {
+        Category category = this.findCategoryByName(categoryType);
+
+        return category.getProductList().size();
+    }
+
+    @Transactional
+    public List<Product> getProductsFromCategory(CategoryType categoryType) {
+        Category category = this.findCategoryByName(categoryType);
+
+        return category.getProductList();
+    }
+
+    @Transactional
+    public BigDecimal getSumByCategory(CategoryType categoryType) {
+        Category category = this.findCategoryByName(categoryType);
+        return category.getProductList().stream().map(Product::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
 }

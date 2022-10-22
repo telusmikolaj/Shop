@@ -8,6 +8,7 @@ import pl.waw.great.shop.model.Product;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public class ProductRepository {
 
     @Transactional
     public Product createProduct(Product product) {
+        product.setCreated();
+        product.setUpdated();
         this.entityManager.persist(product);
         return product;
     }
@@ -38,7 +41,9 @@ public class ProductRepository {
 
     @Transactional
     public Product updateProduct(Product product) {
-        return this.entityManager.merge(product);
+        product.setUpdated();
+        this.entityManager.merge(product);
+        return this.getProudctWithCategory(product.getId());
     }
 
     @Transactional
@@ -60,8 +65,17 @@ public class ProductRepository {
                 .findFirst();
     }
 
-    public Long getProductsQuantity() {
-        return this.entityManager.createQuery("select count(1) from Product", Long.class).getSingleResult();
+    @Transactional
+    public BigDecimal getAllSum() {
+        return this.findAllProducts().stream().map(Product::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public Product getProudctWithCategory(Long id) {
+        TypedQuery<Product> query = this.entityManager.createQuery("SELECT p FROM Product p left join fetch p.category c WHERE p.id=:id", Product.class);
+        query.setParameter("id", id);
+        return query.getResultStream()
+                .findFirst()
+                .orElseThrow(() -> new ProductWithGivenIdNotExistsException(id));
     }
 
 }
