@@ -19,6 +19,7 @@ public class ProductDTO {
     private String description;
     @NotNull
     @Min(value = 1, message = "{priceMinValue}")
+    @Digits(integer = 6, fraction = 2, message = "{invalidPriceFormat}")
     private BigDecimal price;
     @NotNull
     private CategoryType categoryName;
