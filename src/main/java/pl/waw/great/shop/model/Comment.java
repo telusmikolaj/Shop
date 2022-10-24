@@ -1,6 +1,7 @@
 package pl.waw.great.shop.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -19,8 +20,13 @@ public class Comment {
 
     private int index;
 
+    private LocalDateTime created;
+
+    private LocalDateTime updated;
+
     @ManyToOne
     private Product product;
+
     public Comment() {
     }
 
@@ -28,6 +34,8 @@ public class Comment {
         this.name = name;
         this.email = email;
         this.text = text;
+        this.created = LocalDateTime.now();
+        this.updated = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -76,6 +84,22 @@ public class Comment {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(LocalDateTime updated) {
+        this.updated = updated;
     }
 
     @Override

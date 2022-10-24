@@ -6,6 +6,7 @@ import pl.waw.great.shop.model.Comment;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 
 @Repository
 public class CommentRepository {
@@ -15,6 +16,8 @@ public class CommentRepository {
 
     @Transactional
     public Comment create(Comment comment) {
+        comment.setCreated(LocalDateTime.now());
+        comment.setUpdated(LocalDateTime.now());
         this.entityManager.persist(comment);
         return comment;
     }
