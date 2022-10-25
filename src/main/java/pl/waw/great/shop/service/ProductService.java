@@ -1,6 +1,9 @@
 package pl.waw.great.shop.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
@@ -84,11 +87,16 @@ public class ProductService {
         return productDTO;
     }
 
-    public List<ProductListElementDto> findAllProducts() {
-        return this.productRepository.findAllProducts()
+    public List<ProductListElementDto> findAllProducts(Pageable pageable) {
+        List<ProductListElementDto> productListElementDtos = this.productRepository.findAllProducts()
                 .stream()
                 .map(productListElementMapper::productToDto)
                 .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), productListElementDtos.size());
+
+        return new PageImpl<>(productListElementDtos.subList(start, end), pageable, productListElementDtos.size()).toList();
     }
 
     public boolean deleteProduct(Long id) {

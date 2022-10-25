@@ -1,5 +1,7 @@
 package pl.waw.great.shop.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pl.waw.great.shop.model.dto.CommentDto;
 import pl.waw.great.shop.model.dto.ProductDTO;
@@ -50,8 +52,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductListElementDto> findAllProducts() {
-        return this.productService.findAllProducts();
+    public List<ProductListElementDto> findAllProducts(@RequestParam int page, @RequestParam int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+        return this.productService.findAllProducts(pageRequest);
     }
 
     @DeleteMapping("/{id}")
