@@ -11,4 +11,6 @@
     <include file="db/migrations/002-create-product.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/003-init-category-values.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/004-product-comments.sql" relativeToChangelogFile="true"/>
+    <include file="db/migrations/005-create-user.sql" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
