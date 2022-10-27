@@ -16,8 +16,8 @@ public class InMemoryAuthWebSecurityConfigurer {
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        UserDetails user = User.withUsername("spring")
-                .password(encoder.encode("secret"))
+        UserDetails user = User.withUsername("admin")
+                .password(encoder.encode("admin"))
                 .roles("USER")
                 .build();
         UserDetails user1 = User.withUsername("mikolaj")

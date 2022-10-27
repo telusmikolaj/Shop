@@ -29,9 +29,9 @@ public class CategoryRepository {
         return category;
     }
 
-    @Transactional
-    public void addCategory(Category category) {
-        this.entityManager.persist(category);
+    public List<Category> findAll() {
+        return this.entityManager.createQuery("SELECT c FROM  Category c", Category.class).getResultList();
+
     }
 
     @Transactional
