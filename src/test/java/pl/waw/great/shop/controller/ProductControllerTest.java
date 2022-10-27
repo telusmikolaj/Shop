@@ -1,9 +1,6 @@
 package pl.waw.great.shop.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.A;
-import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,25 +19,24 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ErrorInfo;
-import pl.waw.great.shop.model.Comment;
+import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.CommentDto;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.dto.ProductDTO;
-import pl.waw.great.shop.model.dto.ProductListElementDto;
+import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.CommentRepository;
 import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 import pl.waw.great.shop.service.CommentService;
 import pl.waw.great.shop.service.ProductService;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)

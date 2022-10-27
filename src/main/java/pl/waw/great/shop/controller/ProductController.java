@@ -1,6 +1,5 @@
 package pl.waw.great.shop.controller;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pl.waw.great.shop.model.dto.CommentDto;
@@ -57,12 +56,5 @@ public class ProductController {
 
         return this.productService.findAllProducts(pageRequest);
     }
-
-    @DeleteMapping("/{id}")
-    public boolean deleteProductById(@PathVariable Long id) {
-        return this.productService.deleteProduct(id);
-    }
-
-
 
 }

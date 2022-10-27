@@ -62,38 +62,6 @@ public class RestResponseProductExceptionHandler {
         return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
     }
 
-    @ExceptionHandler(value = {InvalidCommentIndexException.class})
-    public ResponseEntity<Object> handleInvalidCommentIndexException(InvalidCommentIndexException e) {
-        String errorMessage = messageSource.getMessage("invalidCommentIndex", new Object[]{e.getIndex()}, Locale.getDefault());
-        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
-        log.error(errorMessage);
-        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
-    }
-
-    @ExceptionHandler(value = {UserWithGivenNameNotExistsException.class})
-    public ResponseEntity<Object> handleUserWithGivenNameNotExistsException(UserWithGivenNameNotExistsException e) {
-        String errorMessage = messageSource.getMessage("userNameNotExists", new Object[]{e.getName()}, Locale.getDefault());
-        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
-        log.error(errorMessage);
-        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
-    }
-
-    @ExceptionHandler(value = {CreatingUserFailedException.class})
-    public ResponseEntity<Object> handleCreatingUserFailedException(CreatingUserFailedException e) {
-        String errorMessage = messageSource.getMessage("creatingUserFailed", new Object[]{e.getName()}, Locale.getDefault());
-        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
-        log.error(errorMessage);
-        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
-    }
-
-    @ExceptionHandler(value = {UserWithGivenNameExistsException.class})
-    public ResponseEntity<Object> handleUserWithGivenNameExistsException(UserWithGivenNameExistsException e) {
-        String errorMessage = messageSource.getMessage("userExists", new Object[]{e.getName()}, Locale.getDefault());
-        ErrorInfo employeeException = new ErrorInfo(errorMessage, HttpStatus.CONFLICT, LocalDateTime.now());
-        log.error(errorMessage);
-        return new ResponseEntity<>(employeeException, employeeException.getHttpStatus());
-    }
-
     public String getFieldErrorsString(MethodArgumentNotValidException e) {
         StringBuilder sb = new StringBuilder();
         List<FieldError> errors = e.getFieldErrors();
