@@ -1,11 +1,13 @@
 package pl.waw.great.shop.repository;
 
+import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 
@@ -28,16 +30,22 @@ class ProductRepositoryTest {
 
     private static final BigDecimal PRICE_2 = BigDecimal.valueOf(899);
 
-    private static final Category CATEGORY = new Category();
+    private Category category;
+
+    private Long QUANTITY = 5L;
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     private Product product;
 
     @BeforeEach
     void setUp() {
-        this.product = new Product(PRODUCT_NAME, DESCRIPTION, PRICE, null);
+        this.category = categoryRepository.findCategoryByName(CategoryType.ELEKTRONIKA);
+        this.product = new Product(PRODUCT_NAME, DESCRIPTION, PRICE, this.category, QUANTITY);
         this.productRepository.createProduct(this.product);
     }
 
@@ -49,7 +57,7 @@ class ProductRepositoryTest {
     @Test
     void create() {
         assertNotNull(this.product.getId());
-        this.productRepository.createProduct(new Product("title", "ddses", BigDecimal.valueOf(15), null));
+        this.productRepository.createProduct(new Product("title", "ddses", BigDecimal.valueOf(15), this.category, QUANTITY));
     }
 
     @Test
@@ -66,7 +74,7 @@ class ProductRepositoryTest {
 
     @Test
     void update() {
-        Product newProduct = new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2, null);
+        Product newProduct = new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2, this.category, QUANTITY);
         newProduct.setId(this.product.getId());
         Product updatedProduct = this.productRepository.updateProduct(newProduct);
         assertEquals(updatedProduct, newProduct);
@@ -74,7 +82,7 @@ class ProductRepositoryTest {
 
     @Test
     void findAllProducts() {
-        this.productRepository.createProduct(new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2, null ));
+        this.productRepository.createProduct(new Product(PRODUCT_NAME_2, DESCRIPTION_2, PRICE_2, this.category, QUANTITY ));
         List<Product> allProducts = this.productRepository.findAllProducts();
         assertEquals(2, allProducts.size());
     }

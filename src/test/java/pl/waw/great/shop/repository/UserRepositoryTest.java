@@ -35,11 +35,6 @@ class UserRepositoryTest {
         this.userRepository.create(user_2);
     }
 
-    @AfterEach
-    void tearDown() {
-        this.userRepository.delete(NAME_2);
-    }
-
     @Test
     void create() {
         User createdUser = this.userRepository.create(user);

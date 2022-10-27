@@ -13,6 +13,8 @@
     <include file="db/migrations/004-product-comments.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/005-create-user.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/006-add-product-quantity.sql" relativeToChangelogFile="true"/>
+    <include file="db/migrations/007-add-order.sql" relativeToChangelogFile="true"/>
+    <include file="db/migrations/008-add-order-line-item.sql" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

@@ -2,6 +2,7 @@ package pl.waw.great.shop.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,6 +17,9 @@ public class User {
     private LocalDateTime created;
 
     private LocalDateTime updated;
+
+    @OneToMany(mappedBy = "user")
+    List<Order> orders;
 
     public User() {
     }

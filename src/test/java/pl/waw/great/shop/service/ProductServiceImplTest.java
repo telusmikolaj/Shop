@@ -50,6 +50,11 @@ class ProductServiceImplTest {
 
     private static final CategoryType CATEGORY_NAME = CategoryType.ELEKTRONIKA;
 
+    private static final Category CATEGORY = new Category(CATEGORY_NAME.toString());
+
+    private static final Long QUANTITY = 5L;
+
+
     private Category category;
     ProductRepository productRepository = mock(ProductRepository.class);
 
@@ -70,7 +75,7 @@ class ProductServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE, null);
+        this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY, QUANTITY);
         this.category = new Category(CATEGORY_NAME.name());
         this.product.setCategory(category);
     }
@@ -84,7 +89,7 @@ class ProductServiceImplTest {
     void createProduct() {
         when(this.productRepository.createProduct(any())).thenReturn(this.product);
         when(this.categoryRepository.findCategoryByName(any())).thenReturn(this.category);
-        ProductDTO createdProduct = this.productService.createProduct(new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME));
+        ProductDTO createdProduct = this.productService.createProduct(new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME, QUANTITY));
         assertEquals(PRODUCT_TITLE, createdProduct.getTitle());
         assertEquals(DESCRIPTION, createdProduct.getDescription());
         assertEquals(PRICE, createdProduct.getPrice());
@@ -92,7 +97,7 @@ class ProductServiceImplTest {
 
     @Test
     void createProductWithDuplicateTitleShouldThrowException() {
-        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME);
+        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME, QUANTITY);
         when(this.productRepository.findProductByTitle(anyString())).thenReturn(Optional.of(this.product));
 
         Assertions.assertThrows(ProductWithGivenTitleExists.class, () -> {
@@ -103,8 +108,8 @@ class ProductServiceImplTest {
 
     @Test
     void updateProduct() {
-        ProductDTO dtoToUpdate = new ProductDTO(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, CATEGORY_NAME);
-        Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, this.category);
+        ProductDTO dtoToUpdate = new ProductDTO(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, CATEGORY_NAME, QUANTITY);
+        Product updated = new Product(UPDATED_TITLE, UPDATED_DESCRIPTION, UPDATED_PRICE, this.category, QUANTITY);
         when(this.productRepository.getProduct(anyLong())).thenReturn(this.product);
         when(this.productRepository.updateProduct(any())).thenReturn(updated);
         ProductDTO saved = this.productService.updateProduct(1L, dtoToUpdate);
@@ -114,7 +119,7 @@ class ProductServiceImplTest {
 
     @Test
     void updateToDuplicateTitleShouldThrowException() {
-        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME);
+        ProductDTO dto = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME, QUANTITY);
         when(this.productRepository.findProductByTitle(anyString())).thenReturn(Optional.of(this.product));
         Assertions.assertThrows(ProductWithGivenTitleExists.class, () -> {
             this.productService.updateProduct(1L, dto);

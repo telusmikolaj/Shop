@@ -8,10 +8,13 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.waw.great.shop.config.CategoryType;
+import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.dto.ProductDTO;
 
 import java.math.BigDecimal;
@@ -35,6 +38,10 @@ class ProductControllerIT {
 
     private static final BigDecimal PRICE_2 = BigDecimal.valueOf(1200);
 
+    private static final CategoryType CATEGORY = CategoryType.ELEKTRONIKA;
+
+    private Long QUANTITY = 5L;
+
     private Long productToUpdateId;
     private ProductDTO productToUpdate;
 
@@ -44,7 +51,7 @@ class ProductControllerIT {
     @BeforeEach
     public void setUp() {
 
-        this.productToUpdate = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2, null);
+        this.productToUpdate = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2, CATEGORY, QUANTITY);
 
         requestSpecification = new RequestSpecBuilder()
                 .setBaseUri("http://localhost:8080/")
@@ -78,7 +85,7 @@ class ProductControllerIT {
 
     @Test
     void createProduct() {
-        ProductDTO newProduct = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE,null);
+        ProductDTO newProduct = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY, QUANTITY);
         ProductDTO createdProductDto = given().spec(requestSpecification).body(newProduct)
                 .when().post()
                 .then().spec(responseSpecification).extract().body().as(ProductDTO.class);
@@ -89,7 +96,7 @@ class ProductControllerIT {
 
     @Test
     void updateProduct() {
-        ProductDTO newProductData = new ProductDTO("NEW_TITLE", "NEW_DESCRIPTION", BigDecimal.valueOf(1500),null);
+        ProductDTO newProductData = new ProductDTO("NEW_TITLE", "NEW_DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY, QUANTITY);
 
         ProductDTO updatedProductDto = given().pathParam("id", productToUpdateId)
                 .spec(requestSpecification).body(newProductData)

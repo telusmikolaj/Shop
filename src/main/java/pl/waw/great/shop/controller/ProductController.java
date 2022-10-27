@@ -3,8 +3,10 @@ package pl.waw.great.shop.controller;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import pl.waw.great.shop.model.dto.CommentDto;
+import pl.waw.great.shop.model.dto.OrderLineDto;
 import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.model.dto.ProductListElementDto;
+import pl.waw.great.shop.service.CartService;
 import pl.waw.great.shop.service.CommentService;
 import pl.waw.great.shop.service.ProductService;
 
@@ -19,9 +21,12 @@ public class ProductController {
 
     private final CommentService commentService;
 
-    public ProductController(ProductService productService, CommentService commentService) {
+    private final CartService cartService;
+
+    public ProductController(ProductService productService, CommentService commentService, CartService cartService) {
         this.productService = productService;
         this.commentService = commentService;
+        this.cartService = cartService;
     }
 
     @PostMapping
@@ -56,5 +61,16 @@ public class ProductController {
 
         return this.productService.findAllProducts(pageRequest);
     }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteProductById(@PathVariable Long id) {
+        return this.productService.deleteProduct(id);
+    }
+
+    @PostMapping("/{productTitle}/addToCart")
+    public List<OrderLineDto> addToCart(@PathVariable String productTitle, @RequestParam Long amount) {
+        return this.cartService.create(productTitle, amount);
+    }
+
 
 }

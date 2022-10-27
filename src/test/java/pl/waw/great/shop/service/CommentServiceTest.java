@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.InvalidCommentIndexException;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
 import pl.waw.great.shop.exception.ProductWithGivenTitleNotExistsException;
@@ -43,6 +44,9 @@ class CommentServiceTest {
 
     private final static String TEST_TEXT = "TLDR";
 
+    private static final Long QUANTITY = 5L;
+
+    private Category category;
     private  Product product;
 
     private CommentDto comment;
@@ -61,7 +65,8 @@ class CommentServiceTest {
 
     @BeforeEach
     void setUp() {
-        this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE, null);
+        this.category = new Category(CategoryType.ELEKTRONIKA.toString());
+        this.product = new Product(PRODUCT_TITLE, DESCRIPTION, PRICE, this.category, QUANTITY);
         this.comment = new CommentDto(TEST_NAME, TEST_EMAIL, TEST_TEXT);
         this.product.addComment(commentMapper.dtoToComment(this.comment));
     }

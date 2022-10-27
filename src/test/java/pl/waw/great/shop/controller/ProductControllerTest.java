@@ -68,6 +68,9 @@ class ProductControllerTest {
 
     private final static String NOT_EXISTING_TITLE = "EXAMPLE";
 
+    private final static Long QUANTITY = 5L;
+
+
     private ProductDTO productDTO;
 
     private ProductDTO toUpdateDto;
@@ -101,9 +104,9 @@ class ProductControllerTest {
     @BeforeEach
     void setup() {
         this.commentDto = new CommentDto(TEST_NAME, TEST_EMAIL, TEST_TEXT);
-        this.productDTO = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME);
+        this.productDTO = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, PRICE, CATEGORY_NAME, QUANTITY);
         this.category = new Category(CATEGORY_NAME.toString());
-        this.toUpdateDto = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2, CATEGORY_NAME);
+        this.toUpdateDto = new ProductDTO(PRODUCT_TITLE_2, DESCRIPTION_2, PRICE_2, CATEGORY_NAME, QUANTITY);
         this.createdProductId = this.productService.createProduct(this.toUpdateDto).getId();
         this.commentService.createComment(this.toUpdateDto.getTitle(), this.commentDto);
     }
@@ -144,7 +147,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void createWithBlankTitleShouldThrowException() throws Exception {
-        ProductDTO dtoWithBlankTitle = new ProductDTO("", DESCRIPTION, PRICE_2, CATEGORY_NAME);
+        ProductDTO dtoWithBlankTitle = new ProductDTO("", DESCRIPTION, PRICE_2, CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(dtoWithBlankTitle);
 
         MvcResult result = sendRequest(MockMvcRequestBuilders.post("/product")
@@ -157,7 +160,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void createWithBlankDescriptionShouldThrowException() throws Exception {
-        ProductDTO dtoWithBlankDescription = new ProductDTO(PRODUCT_TITLE, "", PRICE_2, CATEGORY_NAME);
+        ProductDTO dtoWithBlankDescription = new ProductDTO(PRODUCT_TITLE, "", PRICE_2, CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(dtoWithBlankDescription);
 
         MvcResult result = sendRequest(MockMvcRequestBuilders.post("/product")
@@ -170,7 +173,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void createWithPriceZeroException() throws Exception {
-        ProductDTO dtoWithPriceZero = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, BigDecimal.ZERO, CATEGORY_NAME);
+        ProductDTO dtoWithPriceZero = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, BigDecimal.ZERO, CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(dtoWithPriceZero);
 
         MvcResult result = sendRequest(MockMvcRequestBuilders.post("/product")
@@ -196,7 +199,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void updateToDuplicateTitleShouldThrowException() throws Exception {
-        ProductDTO newData = new ProductDTO(PRODUCT_TITLE_2, "TEST DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY_NAME);
+        ProductDTO newData = new ProductDTO(PRODUCT_TITLE_2, "TEST DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(newData);
 
         MvcResult result = sendRequest(MockMvcRequestBuilders.put("/product/" + this.createdProductId)
@@ -209,7 +212,7 @@ class ProductControllerTest {
     @Test
     @Transactional
     void updateWithNotExistingIdShouldThrowException() throws Exception {
-        ProductDTO newData = new ProductDTO("NEW TITLE", "TEST DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY_NAME);
+        ProductDTO newData = new ProductDTO("NEW TITLE", "TEST DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(newData);
 
         MvcResult result = sendRequest(MockMvcRequestBuilders.put("/product/" + NOT_EXISTING_ID)

@@ -23,6 +23,10 @@ public class ProductDTO {
     private BigDecimal price;
     @NotNull
     private CategoryType categoryName;
+
+    @NotNull
+    private Long quantity;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     List<CommentDto> commentsList = new ArrayList<>();
 
@@ -30,11 +34,12 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(String title, String description, BigDecimal price, CategoryType categoryName) {
+    public ProductDTO(String title, String description, BigDecimal price, CategoryType categoryName, Long quantity) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.categoryName = categoryName;
+        this.quantity = quantity;
     }
 
     public Long getId() {
@@ -83,6 +88,14 @@ public class ProductDTO {
 
     public void setCommentsList(List<CommentDto> commentsList) {
         this.commentsList = commentsList;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     @Override

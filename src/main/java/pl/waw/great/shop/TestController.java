@@ -48,7 +48,8 @@ public class TestController {
             ProductDTO productDTO = new ProductDTO("product" + i,
                     "test description",
                     BigDecimal.valueOf(Long.parseLong(randomNumeric(1, 5))),
-                    CategoryType.values()[index]);
+                    CategoryType.values()[index],
+                    2L);
             this.productService.createProduct(productDTO);
         }
         counter += count;
