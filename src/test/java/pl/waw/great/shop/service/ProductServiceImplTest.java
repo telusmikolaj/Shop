@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.exception.ProductWithGivenTitleExists;
 import pl.waw.great.shop.model.Category;
@@ -25,11 +26,12 @@ import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -57,7 +59,7 @@ class ProductServiceImplTest {
     ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
     @Spy
-    ProductListElementMapper productListElementMapper  = Mappers.getMapper(ProductListElementMapper.class);
+    ProductListElementMapper productListElementMapper = Mappers.getMapper(ProductListElementMapper.class);
     @InjectMocks
     ProductService productService;
 
@@ -130,7 +132,7 @@ class ProductServiceImplTest {
     @Test
     void findAllProducts() {
         when(this.productRepository.findAllProducts()).thenReturn(Collections.singletonList(this.product));
-        List<ProductListElementDto> allProducts = this.productService.findAllProducts();
+        List<ProductListElementDto> allProducts = this.productService.findAllProducts(PageRequest.of(0, 50));
         assertEquals(1, allProducts.size());
     }
 
