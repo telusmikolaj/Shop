@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,7 +21,6 @@ import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.OrderLineItem;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.OrderLineDto;
-import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.repository.Cart;
 import pl.waw.great.shop.repository.CategoryRepository;
 
@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 
 @RunWith(SpringRunner.class)
@@ -73,6 +74,7 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void getCart() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.get("/cart")
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);
@@ -87,6 +89,7 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void clearCart() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.delete("/cart")
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);
@@ -97,6 +100,7 @@ class CartControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void removeItem() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.delete("/cart/" + 0)
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);

@@ -58,6 +58,15 @@ public class Product {
     public BigDecimal getPrice() {
         return price;
     }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public LocalDateTime getUpdated() {
+        return updated;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -112,17 +121,10 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }
 
-    public LocalDateTime getUpdated() {
-        return updated;
-    }
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;

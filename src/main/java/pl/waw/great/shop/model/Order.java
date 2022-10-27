@@ -26,6 +26,9 @@ public class Order {
 
     private LocalDateTime created;
 
+    public Order() {
+    }
+
     public Order(BigDecimal totalPrice, User user, List<OrderLineItem> orderLineItemList, LocalDateTime created) {
         this.totalPrice = totalPrice;
         this.user = user;

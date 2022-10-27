@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.waw.great.shop.model.dto.OrderDto;
 import pl.waw.great.shop.service.OrderService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -15,9 +17,13 @@ public class OrderController {
     }
 
     @PostMapping
-    public OrderDto createOrder(@RequestParam String username) {
-        return this.orderService.createOrder(username);
+    public OrderDto createOrder() {
+        return this.orderService.createOrder();
     }
 
+    @GetMapping
+    public List<OrderDto> getUserOrders() {
+        return this.orderService.getUserOrders();
+    }
 
 }

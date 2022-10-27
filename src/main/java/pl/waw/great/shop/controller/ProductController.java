@@ -8,6 +8,7 @@ import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.model.dto.ProductListElementDto;
 import pl.waw.great.shop.service.CartService;
 import pl.waw.great.shop.service.CommentService;
+import pl.waw.great.shop.service.CartService;
 import pl.waw.great.shop.service.ProductService;
 
 import javax.validation.Valid;

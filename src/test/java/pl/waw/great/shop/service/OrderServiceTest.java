@@ -1,6 +1,5 @@
 package pl.waw.great.shop.service;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +9,7 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 import pl.waw.great.shop.config.CategoryType;
 import pl.waw.great.shop.model.*;
@@ -18,7 +18,6 @@ import pl.waw.great.shop.model.mapper.OrderLineMapper;
 import pl.waw.great.shop.model.mapper.OrderMapper;
 import pl.waw.great.shop.repository.*;
 
-import javax.naming.Name;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -92,11 +91,13 @@ class OrderServiceTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void createOrder() {
         when(this.cart.getCartItems()).thenReturn(this.cartItems);
         when(this.orderRepository.create(any())).thenReturn(this.order);
         when(this.userRepository.findUserByTitle(anyString())).thenReturn(Optional.of(this.user));
-        OrderDto order = this.orderService.createOrder(NAME);
+        when(this.userRepository.create(any())).thenReturn(this.user);
+        OrderDto order = this.orderService.createOrder();
 
         assertNotNull(order);
         assertEquals(NAME, order.getUserName());

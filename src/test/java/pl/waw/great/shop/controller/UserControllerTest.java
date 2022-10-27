@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -61,10 +62,11 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     void createUser() throws Exception {
         String userDtoAsJson = objectMapper.writeValueAsString(this.userDto);
 
-        MvcResult result = sendRequest(MockMvcRequestBuilders.post("/user")
+        MvcResult result = sendRequest(MockMvcRequestBuilders.post("/user/create")
                 .content(userDtoAsJson)
                 .contentType(MediaType.APPLICATION_JSON), HttpStatus.OK);
 

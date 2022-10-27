@@ -6,6 +6,8 @@ import pl.waw.great.shop.model.Order;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
 public class OrderRepository {
@@ -18,4 +20,12 @@ public class OrderRepository {
 
         return order;
     }
+
+    public List<Order> getOrdersByUserId(Long id) {
+        TypedQuery<Order> query = this.entityManager.createQuery("SELECT o FROM Order o inner join fetch o.user u WHERE u.id=:id", Order.class);
+        query.setParameter("id", id);
+
+        return query.getResultList();
+    }
+
 }

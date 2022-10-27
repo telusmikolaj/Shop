@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -119,6 +120,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void createProduct() throws Exception {
         String productDtoAsJson = objectMapper.writeValueAsString(this.productDTO);
 
@@ -133,6 +135,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void createProductWithDuplicateTitleShouldThrowException() throws Exception {
         String productDtoAsJson = objectMapper.writeValueAsString(this.toUpdateDto);
 
@@ -146,6 +149,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void createWithBlankTitleShouldThrowException() throws Exception {
         ProductDTO dtoWithBlankTitle = new ProductDTO("", DESCRIPTION, PRICE_2, CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(dtoWithBlankTitle);
@@ -159,6 +163,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void createWithBlankDescriptionShouldThrowException() throws Exception {
         ProductDTO dtoWithBlankDescription = new ProductDTO(PRODUCT_TITLE, "", PRICE_2, CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(dtoWithBlankDescription);
@@ -172,6 +177,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void createWithPriceZeroException() throws Exception {
         ProductDTO dtoWithPriceZero = new ProductDTO(PRODUCT_TITLE, DESCRIPTION, BigDecimal.ZERO, CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(dtoWithPriceZero);
@@ -185,6 +191,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void updateProduct() throws Exception {
         String productDtoAsJson = objectMapper.writeValueAsString(this.productDTO);
 
@@ -198,6 +205,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void updateToDuplicateTitleShouldThrowException() throws Exception {
         ProductDTO newData = new ProductDTO(PRODUCT_TITLE_2, "TEST DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(newData);
@@ -211,6 +219,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void updateWithNotExistingIdShouldThrowException() throws Exception {
         ProductDTO newData = new ProductDTO("NEW TITLE", "TEST DESCRIPTION", BigDecimal.valueOf(1500), CATEGORY_NAME, QUANTITY);
         String productDtoAsJson = objectMapper.writeValueAsString(newData);
@@ -240,6 +249,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void deleteProductById() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.delete("/product/" + this.createdProductId)
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);
@@ -251,6 +261,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void addComment() throws Exception {
         String commentDtoAsJson = objectMapper.writeValueAsString(this.commentDto);
 
@@ -265,6 +276,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void deleteComment() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.delete("/product/" + PRODUCT_TITLE_2 + "/" + 0)
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);
@@ -277,6 +289,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void findByTitle() throws Exception {
         MvcResult result = sendRequest(MockMvcRequestBuilders.get("/product/" + PRODUCT_TITLE_2)
                 .content(String.valueOf(MediaType.APPLICATION_JSON)), HttpStatus.OK);
@@ -289,6 +302,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void addCommentToWithNotExistingProductTitleShouldThrowException() throws Exception {
         String commentDtoAsJson = objectMapper.writeValueAsString(this.commentDto);
 
@@ -302,6 +316,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void deleteCommentWithNotExistingProductTitleShouldThrowException() throws Exception {
         String commentDtoAsJson = objectMapper.writeValueAsString(this.commentDto);
 
@@ -315,6 +330,7 @@ class ProductControllerTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles = "USER")
     void deleteCommentWithInvalidIndexShouldThrowException() throws Exception {
         String commentDtoAsJson = objectMapper.writeValueAsString(this.commentDto);
 

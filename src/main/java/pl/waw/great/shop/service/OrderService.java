@@ -1,5 +1,7 @@
 package pl.waw.great.shop.service;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.waw.great.shop.exception.CartIsEmptyException;
 import pl.waw.great.shop.exception.UserWithGivenNameNotExistsException;
@@ -17,6 +19,7 @@ import pl.waw.great.shop.repository.UserRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -40,16 +43,17 @@ public class OrderService {
         this.cart = cart;
     }
 
-    public OrderDto createOrder(String name) {
+    public OrderDto createOrder() {
 
         List<OrderLineItem> orderItems = this.cart.getCartItems();
 
         if (orderItems.isEmpty()) {
             throw new CartIsEmptyException();
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = this.userRepository.findUserByTitle(name)
-                .orElseThrow(() -> new UserWithGivenNameNotExistsException(name));
+        User user = this.userRepository.findUserByTitle(authentication.getName())
+                .orElseThrow(() -> new UserWithGivenNameNotExistsException(authentication.getName()));
 
         Order order = new Order(getOrderTotalAmount(orderItems),
                 user,
@@ -60,6 +64,17 @@ public class OrderService {
         this.updateProductsQuantity(orderItems);
         this.cart.clear();
         return orderDto;
+    }
+
+    public List<OrderDto> getUserOrders() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User user = this.userRepository.findUserByTitle(authentication.getName())
+                .orElseThrow(() -> new UserWithGivenNameNotExistsException(authentication.getName()));
+
+        List<Order> ordersByUserId = this.orderRepository.getOrdersByUserId(user.getId());
+
+        return ordersByUserId.stream().map(orderMapper::orderToDto).collect(Collectors.toList());
     }
 
     private BigDecimal getOrderTotalAmount(List<OrderLineItem> orderItems) {
