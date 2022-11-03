@@ -2,16 +2,20 @@ package pl.waw.great.shop.controller;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+import pl.waw.great.shop.config.CategoryType;
+import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.*;
+import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.service.CartService;
 import pl.waw.great.shop.service.CommentService;
 import pl.waw.great.shop.service.ProductService;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -20,7 +24,7 @@ public class ProductController {
 
     private final CartService cartService;
 
-    public ProductController(ProductService productService, CommentService commentService, CartService cartService) {
+    public ProductController(ProductService productService, CommentService commentService, CartService cartService, CategoryRepository categoryRepository) {
         this.productService = productService;
         this.commentService = commentService;
         this.cartService = cartService;
@@ -28,6 +32,9 @@ public class ProductController {
 
     @PostMapping
     public ProductDTO createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        if (productDTO.getQuantity() == null) {
+            productDTO.setQuantity(1L);
+        }
         return this.productService.createProduct(productDTO);
     }
 
@@ -64,10 +71,15 @@ public class ProductController {
         return this.productService.deleteProduct(id);
     }
 
-    @PostMapping("/{productTitle}/addToCart")
-    public CartDto addToCart(@PathVariable String productTitle, @RequestParam Long amount) {
+    @PostMapping("/{productTitle}/{amount}/addToCart")
+    public CartDto addToCart(@PathVariable String productTitle, @PathVariable Long amount) {
         return this.cartService.create(productTitle, amount);
     }
 
+    @GetMapping("/byCategory/{categoryName}")
+    public List<ProductDTO> byCategory(@PathVariable String categoryName) {
+        CategoryType categoryType = CategoryType.valueOf(categoryName);
+        return this.productService.getProductsByCategory(categoryType);
+    }
 
 }

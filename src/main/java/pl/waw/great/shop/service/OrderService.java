@@ -3,6 +3,7 @@ package pl.waw.great.shop.service;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import pl.waw.great.shop.exception.CartIsEmptyException;
 import pl.waw.great.shop.exception.InsufficientProductQuantityException;
 import pl.waw.great.shop.exception.UserWithGivenNameNotExistsException;
@@ -83,6 +84,10 @@ public class OrderService {
         List<Order> ordersByUserId = this.orderRepository.getOrdersByUserId(user.getId());
 
         return ordersByUserId.stream().map(orderMapper::orderToDto).collect(Collectors.toList());
+    }
+
+    public OrderDto getOrderById(@PathVariable String orderId) {
+        return orderMapper.orderToDto(this.orderRepository.getOrderById(orderId));
     }
 
     private BigDecimal getOrderTotalAmount(List<OrderLineItem> orderItems) {

@@ -2,6 +2,7 @@ package pl.waw.great.shop.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +21,7 @@ public class InMemoryAuthWebSecurityConfigurer {
                 .password(encoder.encode("admin"))
                 .roles("USER")
                 .build();
-        UserDetails user1 = User.withUsername("mikolaj")
+        UserDetails user1 = User.withUsername("Mikolaj")
                 .password(encoder.encode("mikolaj"))
                 .roles("USER")
                 .build();
@@ -44,8 +45,13 @@ public class InMemoryAuthWebSecurityConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors();
+        http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers("/user/create")
+                .permitAll()
+                .antMatchers(HttpMethod.DELETE,"/cart").permitAll()
+                .antMatchers("/product/byCategory/**")
                 .permitAll()
                 .antMatchers("/product/allProducts")
                 .permitAll()
@@ -54,7 +60,6 @@ public class InMemoryAuthWebSecurityConfigurer {
                 .antMatchers("/order")
                 .authenticated()
                 .and()
-                .csrf().disable()
                 .httpBasic();
         return http.build();
     }

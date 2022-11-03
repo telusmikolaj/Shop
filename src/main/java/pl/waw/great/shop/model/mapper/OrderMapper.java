@@ -10,6 +10,7 @@ import pl.waw.great.shop.model.dto.OrderDto;
 public interface OrderMapper {
 
     @Mapping(source = "order", target = "userName", qualifiedByName = "getUserName")
+    @Mapping(source = "order", target = "id", qualifiedByName = "getId")
     OrderDto orderToDto(Order order);
 
     Order dtoToOrder(OrderDto orderDto);
@@ -18,4 +19,11 @@ public interface OrderMapper {
     default String getUserName(Order order) {
         return order.getUser().getName();
     }
+
+    @Named("getId")
+    default String getId(Order order) {
+        return order.getId().toString();
+    }
+
+
 }

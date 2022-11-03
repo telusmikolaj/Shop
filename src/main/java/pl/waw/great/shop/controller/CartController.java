@@ -7,6 +7,7 @@ import pl.waw.great.shop.service.CartService;
 
 @RestController
 @RequestMapping("/cart")
+@CrossOrigin
 public class CartController {
 
     private final CartService cartService;

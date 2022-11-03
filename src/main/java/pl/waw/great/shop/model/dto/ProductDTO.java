@@ -24,7 +24,6 @@ public class ProductDTO {
     @NotNull
     private CategoryType categoryName;
 
-    @NotNull
     private Long quantity;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

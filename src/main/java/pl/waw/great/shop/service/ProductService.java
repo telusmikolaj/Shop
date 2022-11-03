@@ -98,6 +98,13 @@ public class ProductService {
         return new PageImpl<>(productListElementDtos.subList(start, end), pageable, productListElementDtos.size()).toList();
     }
 
+    public List<ProductDTO> getProductsByCategory(CategoryType categoryType) {
+        List<Product> productList = this.categoryRepository.getProductsFromCategory(categoryType);
+
+        return productList.stream().map(productMapper::productToDto).collect(Collectors.toList());
+
+    }
+
     public boolean deleteProduct(Long id) {
         return this.productRepository.deleteProduct(id);
     }

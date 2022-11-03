@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class OrderRepository {
@@ -26,6 +27,14 @@ public class OrderRepository {
         query.setParameter("id", id);
 
         return query.getResultList();
+    }
+
+    public Order getOrderById(String id) {
+        UUID uuid = UUID.fromString(id);
+        TypedQuery<Order> query = this.entityManager.createQuery("SELECT o FROM Order o WHERE o.id=:id", Order.class);
+        query.setParameter("id", uuid);
+
+        return query.getSingleResult();
     }
 
 }

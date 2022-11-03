@@ -8,7 +8,7 @@ import java.util.List;
 
 public class OrderDto {
 
-
+    private String id;
     private List<OrderLineDto> orderLineItemList;
 
     private String userName;
@@ -46,5 +46,13 @@ public class OrderDto {
 
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

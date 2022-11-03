@@ -7,7 +7,7 @@ import pl.waw.great.shop.service.OrderService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -21,9 +21,14 @@ public class OrderController {
         return this.orderService.createOrder();
     }
 
-    @GetMapping
-    public List<OrderDto> getUserOrders() {
+    @GetMapping("/byUser/{userName}")
+    public List<OrderDto> getUserOrders(@PathVariable String userName) {
         return this.orderService.getUserOrders();
+    }
+
+    @GetMapping("/{orderId}")
+    public OrderDto getOrderById(@PathVariable String orderId) {
+        return this.orderService.getOrderById(orderId);
     }
 
 }
