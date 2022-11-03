@@ -10,35 +10,22 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import pl.waw.great.shop.model.User;
-import pl.waw.great.shop.model.dto.UserDto;
-import pl.waw.great.shop.repository.UserRepository;
+import pl.waw.great.shop.model.dto.MessageDto;
+import pl.waw.great.shop.repository.MessageRepository;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
-
-    private static final String NAME = "Lukasz";
-
-    private static final String NAME_2 = "Pawel";
-
-    private static final String NOT_EXISTING_NAME = "Robert";
-
-    private UserDto userDto;
-
-    private User user_2;
+class MessageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,33 +34,37 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private UserRepository userRepository;
+    private MessageRepository messageRepository;
+
+    private MessageDto messageDto;
+
+    private static final String TITLE = "title";
+    private static final String TEXT = "txt";
+    private static final String CITY = "city";
+    private static final String EMAIL = "email";
 
     @BeforeEach
     void setUp() {
-        this.userDto = new UserDto(NAME);
-        this.user_2 = new User(NAME_2);
-        this.userRepository.create(this.user_2);
+        this.messageDto = new MessageDto(TITLE, TEXT, CITY, EMAIL);
     }
 
     @AfterEach
     void tearDown() {
-        this.userRepository.delete(userDto.getName());
+        this.messageRepository.deleteAll();
     }
 
     @Test
-    @WithMockUser(roles = "USER")
-    void createUser() throws Exception {
-        String userDtoAsJson = objectMapper.writeValueAsString(this.userDto);
+    void create() throws Exception {
+        String messageDtoAsJson = objectMapper.writeValueAsString(this.messageDto);
 
-        MvcResult result = sendRequest(MockMvcRequestBuilders.post("/user/create")
-                .content(userDtoAsJson)
-                .contentType(MediaType.APPLICATION_JSON), HttpStatus.OK);
+        MvcResult result = sendRequest(MockMvcRequestBuilders.post("/message")
+                                .content(messageDtoAsJson)
+                                .contentType(MediaType.APPLICATION_JSON), HttpStatus.OK);
 
-        UserDto savedUserDto = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
+        MessageDto messageDto = objectMapper.readValue(result.getResponse().getContentAsString(), MessageDto.class);
 
-        assertNotNull(savedUserDto);
-        assertEquals(savedUserDto.getName(), this.userDto.getName());
+        assertNotNull(messageDto);
+        assertEquals(TITLE, messageDto.getTitle());
     }
 
     private MvcResult sendRequest(RequestBuilder request, HttpStatus expectedStatus) throws Exception {

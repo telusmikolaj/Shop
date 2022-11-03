@@ -15,6 +15,5 @@
     <include file="db/migrations/006-add-product-quantity.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/007-add-order.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/008-add-order-line-item.sql" relativeToChangelogFile="true"/>
-
-
+    <include file="db/migrations/009-create-message.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

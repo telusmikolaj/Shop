@@ -23,11 +23,9 @@ import pl.waw.great.shop.exception.ErrorInfo;
 import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.dto.CommentDto;
-import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.dto.ProductDTO;
 import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.CommentRepository;
-import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 import pl.waw.great.shop.service.CommentService;
 import pl.waw.great.shop.service.ProductService;
@@ -83,7 +81,6 @@ class ProductControllerTest {
     private Long createdProductId;
     @Autowired
     private MockMvc mockMvc;
-
     @Autowired
     private ObjectMapper objectMapper;
 
