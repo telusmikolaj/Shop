@@ -15,7 +15,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String text;
+    private String body;
     private String city;
     private String email;
     private LocalDateTime created;
@@ -24,9 +24,9 @@ public class Message {
     public Message() {
     }
 
-    public Message(String title, String text, String city, String email) {
+    public Message(String title, String body, String city, String email) {
         this.title = title;
-        this.text = text;
+        this.body = body;
         this.city = city;
         this.email = email;
     }
@@ -43,12 +43,12 @@ public class Message {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getBody() {
+        return body;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getCity() {
@@ -90,12 +90,12 @@ public class Message {
         if (o == null || getClass() != o.getClass())
             return false;
         Message message = (Message) o;
-        return Objects.equals(title, message.title) && Objects.equals(text, message.text) && Objects.equals(city, message.city) && Objects.equals(
+        return Objects.equals(title, message.title) && Objects.equals(body, message.body) && Objects.equals(city, message.city) && Objects.equals(
                 email, message.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, text, city, email);
+        return Objects.hash(title, body, city, email);
     }
 }

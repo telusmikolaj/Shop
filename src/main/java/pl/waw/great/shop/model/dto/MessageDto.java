@@ -7,15 +7,15 @@ public class MessageDto {
     @NotBlank(message = "{titleNotBlank}")
     private String title;
     @NotBlank(message = "{textNotBlank}")
-    private String text;
+    private String body;
     @NotBlank(message = "{cityNotBlank}")
     private String city;
     @NotBlank(message = "{emailNotBlank}")
     private String email;
 
-    public MessageDto(String title, String text, String city, String email) {
+    public MessageDto(String title, String body, String city, String email) {
         this.title = title;
-        this.text = text;
+        this.body = body;
         this.city = city;
         this.email = email;
     }
@@ -28,12 +28,12 @@ public class MessageDto {
         this.title = title;
     }
 
-    public String getText() {
-        return text;
+    public String getBody() {
+        return body;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public String getCity() {

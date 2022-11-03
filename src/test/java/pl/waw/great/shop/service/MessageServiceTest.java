@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,7 +57,7 @@ class MessageServiceTest {
 
         assertNotNull(messageDto);
         assertEquals(TITLE, messageDto.getTitle());
-        assertEquals(TEXT, messageDto.getText());
+        assertEquals(TEXT, messageDto.getBody());
         assertEquals(CITY, messageDto.getCity());
         assertEquals(EMAIL, messageDto.getEmail());
     }

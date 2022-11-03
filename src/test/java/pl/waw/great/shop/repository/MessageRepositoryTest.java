@@ -30,7 +30,7 @@ class MessageRepositoryTest {
         Message createdMessage = messageRepository.create(message);
 
         assertEquals(TITLE, createdMessage.getTitle());
-        assertEquals(TEXT, createdMessage.getText());
+        assertEquals(TEXT, createdMessage.getBody());
         assertEquals(CITY, createdMessage.getCity());
         assertEquals(EMAIL, createdMessage.getEmail());
     }
