@@ -30,6 +30,9 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<Comment> commentsList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<CartLineItem> cartLineItemList;
+
     public Product() {
     }
 

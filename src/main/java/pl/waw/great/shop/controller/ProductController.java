@@ -2,13 +2,9 @@ package pl.waw.great.shop.controller;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-import pl.waw.great.shop.model.dto.CommentDto;
-import pl.waw.great.shop.model.dto.OrderLineDto;
-import pl.waw.great.shop.model.dto.ProductDTO;
-import pl.waw.great.shop.model.dto.ProductListElementDto;
+import pl.waw.great.shop.model.dto.*;
 import pl.waw.great.shop.service.CartService;
 import pl.waw.great.shop.service.CommentService;
-import pl.waw.great.shop.service.CartService;
 import pl.waw.great.shop.service.ProductService;
 
 import javax.validation.Valid;
@@ -69,7 +65,7 @@ public class ProductController {
     }
 
     @PostMapping("/{productTitle}/addToCart")
-    public List<OrderLineDto> addToCart(@PathVariable String productTitle, @RequestParam Long amount) {
+    public CartDto addToCart(@PathVariable String productTitle, @RequestParam Long amount) {
         return this.cartService.create(productTitle, amount);
     }
 

@@ -2,10 +2,7 @@ package pl.waw.great.shop.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import pl.waw.great.shop.config.CategoryType;
-import pl.waw.great.shop.model.Category;
 import pl.waw.great.shop.model.dto.CategoryDto;
-import pl.waw.great.shop.repository.CategoryRepository;
 import pl.waw.great.shop.service.CategoryService;
 
 import java.util.List;

@@ -53,15 +53,20 @@ class OrderServiceTest {
 
     private OrderLineItem orderLineItem;
 
-    private List<OrderLineItem> cartItems = new ArrayList<>();
+    private List<OrderLineItem> orderItems = new ArrayList<>();
 
-    private Cart cart = mock(Cart.class);
+    private CartLineItem cartLineItem;
+
+    private Cart cart;
+
+    private CartRepository cartRepository = mock(CartRepository.class);
 
     private UserRepository userRepository = mock(UserRepository.class);
 
     private OrderRepository orderRepository = mock(OrderRepository.class);
 
     private ProductRepository productRepository = mock(ProductRepository.class);
+
     @InjectMocks
     private OrderService orderService;
 
@@ -80,8 +85,12 @@ class OrderServiceTest {
         this.category = categoryRepository.findCategoryByName(CategoryType.ELEKTRONIKA);
         this.product = new Product(PRODUCT_NAME, DESCRIPTION, PRICE, this.category, QUANTITY);
         this.orderLineItem = new OrderLineItem(this.product, 2L);
-        this.cartItems.add(this.orderLineItem);
-        this.order = new Order(BigDecimal.ONE, this.user, this.cartItems, LocalDateTime.now());
+        this.orderItems.add(this.orderLineItem);
+        this.cart = new Cart();
+        this.cart.setUser(this.user);
+        this.cartLineItem = new CartLineItem(this.product, this.cart, 1, LocalDateTime.now(), LocalDateTime.now(), 2L);
+        this.cart.addCartLineItem(this.cartLineItem);
+        this.order = new Order(BigDecimal.ONE, this.user, this.orderItems, LocalDateTime.now());
 
         ReflectionTestUtils.setField(
                 orderMapper,
@@ -93,13 +102,13 @@ class OrderServiceTest {
     @Test
     @WithMockUser(roles = "USER")
     void createOrder() {
-        when(this.cart.getCartItems()).thenReturn(this.cartItems);
+        when(this.cartRepository.findCartByUserId(any())).thenReturn(this.cart);
         when(this.orderRepository.create(any())).thenReturn(this.order);
         when(this.userRepository.findUserByTitle(anyString())).thenReturn(Optional.of(this.user));
         when(this.userRepository.create(any())).thenReturn(this.user);
         OrderDto order = this.orderService.createOrder();
 
         assertNotNull(order);
-        assertEquals(NAME, order.getUserName());
+        assertEquals(BigDecimal.ONE, order.getTotalPrice());
     }
 }

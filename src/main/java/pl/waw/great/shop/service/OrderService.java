@@ -4,14 +4,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.waw.great.shop.exception.CartIsEmptyException;
+import pl.waw.great.shop.exception.InsufficientProductQuantityException;
 import pl.waw.great.shop.exception.UserWithGivenNameNotExistsException;
 import pl.waw.great.shop.model.Order;
 import pl.waw.great.shop.model.OrderLineItem;
 import pl.waw.great.shop.model.Product;
 import pl.waw.great.shop.model.User;
 import pl.waw.great.shop.model.dto.OrderDto;
+import pl.waw.great.shop.model.mapper.OrderLineMapper;
 import pl.waw.great.shop.model.mapper.OrderMapper;
-import pl.waw.great.shop.repository.Cart;
+import pl.waw.great.shop.model.Cart;
+import pl.waw.great.shop.repository.CartRepository;
 import pl.waw.great.shop.repository.OrderRepository;
 import pl.waw.great.shop.repository.ProductRepository;
 import pl.waw.great.shop.repository.UserRepository;
@@ -30,30 +33,35 @@ public class OrderService {
 
     private final OrderMapper orderMapper;
 
+    private final OrderLineMapper orderLineMapper;
 
     private final ProductRepository productRepository;
 
-    private final Cart cart;
+    private final CartRepository cartRepository;
 
-    public OrderService(UserRepository userRepository, OrderRepository orderRepository, OrderMapper orderMapper, ProductRepository productRepository, Cart cart) {
+    public OrderService(UserRepository userRepository, OrderRepository orderRepository, OrderMapper orderMapper, OrderLineMapper orderLineMapper, ProductRepository productRepository,CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.orderRepository = orderRepository;
         this.orderMapper = orderMapper;
+        this.orderLineMapper = orderLineMapper;
         this.productRepository = productRepository;
-        this.cart = cart;
+        this.cartRepository = cartRepository;
     }
 
     public OrderDto createOrder() {
+        User user = this.getAuthenticatedUser();
 
-        List<OrderLineItem> orderItems = this.cart.getCartItems();
+        Cart cartByUserId = this.cartRepository.findCartByUserId(user.getId());
+        List<OrderLineItem> orderItems =
+                cartByUserId.getCartLineItemList()
+                        .stream()
+                        .map(orderLineMapper::cartItemToOrderItem)
+                        .collect(Collectors.toList());
 
         if (orderItems.isEmpty()) {
             throw new CartIsEmptyException();
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        User user = this.userRepository.findUserByTitle(authentication.getName())
-                .orElseThrow(() -> new UserWithGivenNameNotExistsException(authentication.getName()));
 
         Order order = new Order(getOrderTotalAmount(orderItems),
                 user,
@@ -62,7 +70,7 @@ public class OrderService {
 
         OrderDto orderDto = orderMapper.orderToDto(this.orderRepository.create(order));
         this.updateProductsQuantity(orderItems);
-        this.cart.clear();
+        this.cartRepository.delete(cartByUserId.getId());
         return orderDto;
     }
 
@@ -86,8 +94,20 @@ public class OrderService {
     private void updateProductsQuantity(List<OrderLineItem> itemList) {
         itemList.forEach(item -> {
             Product product = item.getProduct();
-            product.setQuantity(product.getQuantity() - item.getQuantity());
+            long updatedQuantity = product.getQuantity() - item.getQuantity();
+
+            if (updatedQuantity < 0) {
+                throw new InsufficientProductQuantityException(product.getTitle(), product.getQuantity());
+            }
+            product.setQuantity(updatedQuantity);
             this.productRepository.updateProduct(product);
         });
+    }
+
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return this.userRepository.findUserByTitle(authentication.getName())
+                .orElseThrow(() -> new UserWithGivenNameNotExistsException(authentication.getName()));
     }
 }

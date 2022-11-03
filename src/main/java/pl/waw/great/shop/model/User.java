@@ -21,6 +21,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Order> orders;
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
+    Cart cart;
+
+
     public User() {
     }
 
