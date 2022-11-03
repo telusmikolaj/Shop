@@ -16,4 +16,7 @@
     <include file="db/migrations/007-add-order.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/008-add-order-line-item.sql" relativeToChangelogFile="true"/>
     <include file="db/migrations/009-create-message.sql" relativeToChangelogFile="true"/>
+    <include file="db/migrations/010-init-users.sql" relativeToChangelogFile="true"/>
+
+
 </databaseChangeLog>
