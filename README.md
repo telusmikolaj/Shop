@@ -7,11 +7,9 @@
 * [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Screenshots](#screenshots)
-* [Setup](#setup)
 * [Usage](#usage)
 * [Project Status](#project-status)
 * [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
 * [Contact](#contact)
 <!-- * [License](#license) -->
 
@@ -80,7 +78,6 @@ Include areas you believe need improvement / could be improved. Also add TODOs f
 
 Room for improvement:
 - better frontend
-- Improvement to be done 2
 
 To do:
 - bonus coins system
