@@ -53,6 +53,7 @@ List the ready features here:
 - Auctions
 - Login/Logout
 - Sending message to shop 
+- adding comments
 
 
 ## Screenshots
@@ -60,10 +61,13 @@ List the ready features here:
 ![Example screenshot](./img/2.png)
 ![Example screenshot](./img/3.png)
 ![Example screenshot](./img/4.png)
+![Example screenshot](./img/5.png)
 <!-- If you have screenshots you'd like to share, include them here. -->
 
 ## Usage
+https://shop-front-build.herokuapp.com
 
+Credentials:
 Login: admin  
 password: admin
 
@@ -79,8 +83,8 @@ Room for improvement:
 - Improvement to be done 2
 
 To do:
-- 
-- Feature to be added 2
+- bonus coins system
+- searching products by title
 
 ## Contact
 Created by [@telusmikolaj](https://www.linkedin.com/in/miko%C5%82aj-telus-84aa7122b) - feel free to contact me!
