@@ -57,6 +57,9 @@ List the ready features here:
 
 ## Screenshots
 ![Example screenshot](./img/1.png)
+![Example screenshot](./img/2.png)
+![Example screenshot](./img/3.png)
+![Example screenshot](./img/4.png)
 <!-- If you have screenshots you'd like to share, include them here. -->
 
 ## Usage
